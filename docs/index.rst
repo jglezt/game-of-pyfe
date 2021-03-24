@@ -1,4 +1,4 @@
-package_name documentation
+game_of_pyfe documentation
 ==========================
 
 .. toctree::
