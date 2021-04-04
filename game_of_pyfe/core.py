@@ -65,6 +65,9 @@ def update_cell(field: np.array) -> int:
     -------
     The cell state. 1 to live, 0 to death.
     """
+    field_shape = field.shape
+    assert field_shape[0] == 3 and field_shape[1] == 3
+
     total = np.sum(field)
     cell = 0
 
@@ -76,7 +79,7 @@ def update_cell(field: np.array) -> int:
     return cell
 
 
-def update_grid(board: np.array) -> np.array:
+def update_grid(board: np.array, mode: Literal["wrap", "zeros"] = "wrap") -> np.array:
     """Move one generation in the game of life.
 
     The operation is inmutable.
@@ -94,7 +97,7 @@ def update_grid(board: np.array) -> np.array:
     board_shape = new_board.shape
     assert board_shape[0] >= 2 and board_shape[1] >= 2
 
-    fields = generate_fields(new_board)
+    fields = generate_fields(new_board, mode)
 
     for i in range(board_shape[0]):
         for j in range(board_shape[1]):
@@ -103,7 +106,9 @@ def update_grid(board: np.array) -> np.array:
     return new_board
 
 
-def evolve_grid(board: np.array, n_times: int) -> np.array:
+def evolve_grid(
+    board: np.array, n_times: int, mode: Literal["wrap", "zeros"] = "wrap"
+) -> np.array:
     """
     Iterate through a board `n` generations.
 
@@ -117,9 +122,9 @@ def evolve_grid(board: np.array, n_times: int) -> np.array:
     a new board with the state the current generation.
     """
     board_shape = board.shape
-    assert board_shape[0] > 2 and board_shape[1] > 2
+    assert board_shape[0] >= 2 and board_shape[1] >= 2
 
     new_board = board.copy()
     for _ in range(n_times):
-        new_board = update_grid(new_board)
+        new_board = update_grid(new_board, mode)
         yield new_board
