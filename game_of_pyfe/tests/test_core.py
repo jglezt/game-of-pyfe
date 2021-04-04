@@ -5,8 +5,7 @@ import math
 
 import numpy as np
 
-# from package_name.module import cubic_rectification
-from ..core import evolve_grid, generate_fields, update_cell, update_grid
+from ..core import evolve_board, generate_fields, update_board, update_cell
 from .base_test import BaseTestCase, unittest
 
 
@@ -222,37 +221,37 @@ class TestUpdateCell(BaseTestCase):
         self.assertEqual(0, update_cell(field))
 
 
-class TestUpdateGrid(BaseTestCase):
+class TestUpdateBoard(BaseTestCase):
     """
-    Tests for the update_grid function.
+    Tests for the update_board function.
     """
 
     def test_exception_raising(self):
         """Test for fields of shape different from (3, 3)."""
         board = np.zeros([1, 1])
-        self.assertRaises(AssertionError, update_grid, board)
+        self.assertRaises(AssertionError, update_board, board)
 
         board = np.zeros([0, 0])
-        self.assertRaises(AssertionError, update_grid, board)
+        self.assertRaises(AssertionError, update_board, board)
 
         board = np.zeros([2, 0])
-        self.assertRaises(AssertionError, update_grid, board)
+        self.assertRaises(AssertionError, update_board, board)
 
         board = np.zeros([0, 2])
-        self.assertRaises(AssertionError, update_grid, board)
+        self.assertRaises(AssertionError, update_board, board)
 
         board = np.zeros([1])
-        self.assertRaises(AssertionError, update_grid, board)
+        self.assertRaises(AssertionError, update_board, board)
 
         # Does not need an spetial assert, it could be assumed from
         # the IndexError exception
         board = np.zeros([2])
-        self.assertRaises(IndexError, update_grid, board)
+        self.assertRaises(IndexError, update_board, board)
 
     def test_oscillator(self):
         """Test if the function correctly produces the next\
         step of a simple oscillator."""
-        grid = np.array(
+        board = np.array(
             [
                 [0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0],
@@ -270,13 +269,13 @@ class TestUpdateGrid(BaseTestCase):
                 [0, 0, 0, 0, 0],
             ]
         )
-        result = update_grid(grid)
+        result = update_board(board)
 
         self.assert_array_equal(result, expected_result)
 
     def test_oscillator_edge_wrap(self):
         """Test simple oscillator in edge."""
-        grid = np.array(
+        board = np.array(
             [
                 [1, 1, 0, 0, 1],
                 [0, 0, 0, 0, 0],
@@ -294,13 +293,13 @@ class TestUpdateGrid(BaseTestCase):
                 [1, 0, 0, 0, 0],
             ]
         )
-        result = update_grid(grid)
+        result = update_board(board)
 
         self.assert_array_equal(result, expected_result)
 
     def test_oscillator_edge_zeros(self):
         """Test simple oscillator in edge using zeros padding."""
-        grid = np.array(
+        board = np.array(
             [
                 [1, 1, 0, 0, 1],
                 [0, 0, 0, 0, 0],
@@ -318,48 +317,48 @@ class TestUpdateGrid(BaseTestCase):
                 [0, 0, 0, 0, 0],
             ]
         )
-        result = update_grid(grid, "zeros")
+        result = update_board(board, "zeros")
 
         self.assert_array_equal(result, expected_result)
 
 
-class TestEvolveGrid(BaseTestCase):
+class TestEvolveBoard(BaseTestCase):
     """
-    Tests for the evolve_grid function.
+    Tests for the evolve_board function.
     """
 
     def test_exception_raising(self):
         """Test  when board is smaller than 2 in any of the axis."""
         board = np.zeros([1, 1])
-        iterator = evolve_grid(board, 1)
+        iterator = evolve_board(board, 1)
         self.assertRaises(AssertionError, iterator.__next__)
 
         board = np.zeros([0, 0])
-        iterator = evolve_grid(board, 1)
+        iterator = evolve_board(board, 1)
         self.assertRaises(AssertionError, iterator.__next__)
 
         board = np.zeros([2, 0])
-        iterator = evolve_grid(board, 1)
+        iterator = evolve_board(board, 1)
         self.assertRaises(AssertionError, iterator.__next__)
 
         board = np.zeros([0, 2])
-        iterator = evolve_grid(board, 1)
+        iterator = evolve_board(board, 1)
         self.assertRaises(AssertionError, iterator.__next__)
 
         board = np.zeros([1])
-        iterator = evolve_grid(board, 1)
+        iterator = evolve_board(board, 1)
         self.assertRaises(AssertionError, iterator.__next__)
 
         # Does not need an spetial assert, it could be assumed from
         # the IndexError exception
         board = np.zeros([2])
-        iterator = evolve_grid(board, 1)
+        iterator = evolve_board(board, 1)
         self.assertRaises(IndexError, iterator.__next__)
 
     def test_zero_generations(self):
         """Test if the generator stops when 0 generations are given."""
-        grid = np.zeros([3, 3])
-        iterator = evolve_grid(grid, 0)
+        board = np.zeros([3, 3])
+        iterator = evolve_board(board, 0)
         self.assertRaises(StopIteration, iterator.__next__)
 
     def test_simplespaceship(self):
@@ -394,7 +393,7 @@ class TestEvolveGrid(BaseTestCase):
                 ]
             ),
         ]
-        next_boards = evolve_grid(board, 2)
+        next_boards = evolve_board(board, 2)
 
         for next_board, expected_result in zip(next_boards, expected_results):
             self.assert_array_equal(next_board, expected_result)

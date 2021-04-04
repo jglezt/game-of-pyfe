@@ -29,7 +29,7 @@ def generate_fields(
 
     Returns
     -------
-    The fields around each cell of the grid. It has a shape of
+    The fields around each cell of the board. It has a shape of
     (n, m, 3, 3)
     """
     board_shape = board.shape
@@ -79,7 +79,7 @@ def update_cell(field: np.array) -> int:
     return cell
 
 
-def update_grid(board: np.array, mode: Literal["wrap", "zeros"] = "wrap") -> np.array:
+def update_board(board: np.array, mode: Literal["wrap", "zeros"] = "wrap") -> np.array:
     """Move one generation in the game of life.
 
     The operation is inmutable.
@@ -106,7 +106,7 @@ def update_grid(board: np.array, mode: Literal["wrap", "zeros"] = "wrap") -> np.
     return new_board
 
 
-def evolve_grid(
+def evolve_board(
     board: np.array, n_times: int, mode: Literal["wrap", "zeros"] = "wrap"
 ) -> np.array:
     """
@@ -126,5 +126,5 @@ def evolve_grid(
 
     new_board = board.copy()
     for _ in range(n_times):
-        new_board = update_grid(new_board, mode)
+        new_board = update_board(new_board, mode)
         yield new_board
