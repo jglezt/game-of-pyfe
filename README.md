@@ -3,6 +3,8 @@
 Simple python implementation of Conway's Game of Life
 [Reference](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life)
 
+labyrinth challenge https://github.com/jglezt/labyrinth
+
 ## Installation
 To install the module, download this repository.
 ```
